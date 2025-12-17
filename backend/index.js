@@ -8,6 +8,7 @@ import connectDB from './config/db.js'
 import userRoutes from './routes/userRoutes.js'
 import genreRoutes from './routes/genreRoutes.js'
 import moviesRoutes from './routes/movieRoutes.js'
+import uploadRoutes from './routes/uploadRoutes.js'
 
 // Configurations 
 dotenv.config()
@@ -27,6 +28,10 @@ const PORT = process.env.PORT
 app.use("/api/v1/users",userRoutes)
 app.use("/api/v1/genre",genreRoutes)
 app.use("/api/v1/movies",moviesRoutes)
+app.use("/api/v1/upload",uploadRoutes)
+
+const __dirname = path.resolve()
+app.use('/uploads',express.static(path.join(__dirname + '/uploads')))
 app.listen(PORT,(req,res)=>{
     console.log(`Server running on port ${PORT}`)
 })
