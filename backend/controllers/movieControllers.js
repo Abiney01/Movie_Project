@@ -121,7 +121,7 @@ const deleteComment = async (req, res) => {
     movie.rating =
       movie.reviews.length > 0
         ? movie.reviews.reduce((acc, item) => item.rating + acc, 0) /
-          movie.review.length
+          movie.reviews.length
         : 0;
 
     await movie.save();
