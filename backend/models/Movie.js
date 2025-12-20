@@ -46,7 +46,7 @@ const movieSchema = mongoose.Schema(
     cast: [{ type: String }],
     reviews: [reviewSchema],
     numReviews: {
-      type: String,
+      type: Number,
       required: true,
       default: 0,
     },
