@@ -1,67 +1,96 @@
+
 # Movie Project
 
-Simple full-stack movie management application (Node + Express backend, React frontend).
+Full-stack movie management application — Node + Express backend and React + Vite frontend.
 
-## Tech stack
-- Backend: Node.js, Express, MongoDB, Mongoose
-- Frontend: React, Vite, Redux Toolkit
-- Auth: JWT
+**Tech stack:** Node.js, Express, MongoDB (Mongoose), React, Vite, Redux Toolkit, JWT auth
 
-## Quick start
+## Quick start (dev)
 
-Prerequisites: Node.js (16+), npm, MongoDB (local or cloud)
+Prerequisites: Node.js 16+, npm, MongoDB (local or Atlas)
 
-1. Install backend dependencies and run:
+From the project root you can run both servers concurrently:
 
-```powershell
-cd backend
+```bash
 npm install
-npm run dev
+npm run fullstack
 ```
 
-2. Install frontend dependencies and run:
+Or run each side separately:
 
-```powershell
-cd frontend
-npm install
-npm run dev
+```bash
+# start backend (uses nodemon)
+npm run backend
+
+# start frontend (Vite)
+npm run frontend
 ```
 
-Open the frontend dev server URL printed by Vite (usually http://localhost:5173).
+Frontend dev server (Vite) usually runs on http://localhost:5173. Backend port is read from `process.env.PORT`.
 
-## Environment variables
+## Backend — environment
 
-Create a `.env` in `backend/` with at least:
+Create a `.env` file in the `backend/` folder with these minimum variables:
 
-- `MONGO_URI` — MongoDB connection string
-- `JWT_SECRET` — secret for signing tokens
-- `PORT` — backend port (optional, default in code)
+```
+MONGO_URI=your-mongodb-connection-string
+JWT_SECRET=your_jwt_secret
+PORT=5000
+NODE_ENV=development
+```
 
-Frontend may use its default Vite settings; add env vars if you integrate external services.
+Notes:
+- The backend signs JWTs and sets them as an httpOnly cookie named `jwt`.
+- The uploads folder is served statically at `/uploads`.
 
-## Available API (overview)
+## API overview
 
-- Auth: `POST /api/users/login`, `POST /api/users/register`, `GET /api/users/profile` (protected)
-- Movies: `GET /api/movies`, `GET /api/movies/:id`, `POST /api/movies` (admin), `PUT /api/movies/:id` (admin), `DELETE /api/movies/:id` (admin)
-- Genres: `GET /api/genres`, `POST /api/genres` (admin), `PUT /api/genres/:id`, `DELETE /api/genres/:id`
+Base path: `/api/v1`
 
-Refer to the route files in `backend/routes/` for exact paths and controllers.
+Auth
+- `POST /api/v1/users/register` — register new user
+- `POST /api/v1/users/login` — login (sets JWT cookie)
+- `GET  /api/v1/users/profile` — get profile (protected)
 
-## Project structure (high level)
+Movies
+- `GET    /api/v1/movies` — list movies
+- `GET    /api/v1/movies/:id` — movie details
+- `POST   /api/v1/movies` — create (admin)
+- `PUT    /api/v1/movies/:id` — update (admin)
+- `DELETE /api/v1/movies/:id` — delete (admin)
+
+Genres
+- `GET    /api/v1/genre` — list genres
+- `POST   /api/v1/genre` — create genre (admin)
+- `PUT    /api/v1/genre/:id` — update (admin)
+- `DELETE /api/v1/genre/:id` — delete (admin)
+
+For exact route names and expected payloads, see the route files in `backend/routes/`.
+
+## Project structure
 
 - `backend/` — server code (routes, controllers, models, middlewares)
-- `frontend/` — React app with components, pages, and Redux state
+	- `index.js` — server entry
+	- `config/db.js` — MongoDB connection
+	- `controllers/` — route handlers
+	- `models/` — Mongoose models (`User`, `Movie`, `Genre`)
+	- `routes/` — Express routes
+	- `middlewares/` — auth and helpers
+- `frontend/` — React + Vite application
+- `uploads/` — public uploads served at `/uploads`
 
-Notable files:
-- `backend/index.js` — server entry
-- `backend/models/` — Mongoose models (`User`, `Movie`, `Genre`)
-- `frontend/src/` — React source code
+## Useful scripts (root package.json)
 
-## Features
+- `npm run fullstack` — run frontend and backend concurrently
+- `npm run backend` — run backend with `nodemon backend/index.js`
+- `npm run frontend` — change to `frontend/` and run `npm run dev`
 
-- User registration and login (JWT)
-- Role-based admin actions for managing movies and genres
-- Movie and genre CRUD
+## Notes & Troubleshooting
+
+- Ensure `MONGO_URI` is valid before starting the backend.
+- If you don't see the backend logs, verify `PORT` is set and not already in use.
+- Authentication uses an httpOnly cookie; API requests from the frontend should include credentials when needed.
+
 
 
 
